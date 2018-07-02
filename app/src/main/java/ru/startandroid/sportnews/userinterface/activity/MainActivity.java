@@ -18,10 +18,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         conteiner = findViewById(R.id.conteiner);
-
-        Fragment fragment = new SportNewsFragment();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.conteiner,fragment);
-        ft.commit();
+        {
+            Fragment fragment = new SportNewsFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.conteiner, fragment);
+            ft.commit();
+        }
     }
 }
