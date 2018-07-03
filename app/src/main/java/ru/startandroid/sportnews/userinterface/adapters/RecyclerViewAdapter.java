@@ -14,10 +14,12 @@ import java.util.List;
 
 import ru.startandroid.sportnews.R;
 import ru.startandroid.sportnews.models.api.Article;
+import timber.log.Timber;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-   public List<Article> articleList;
+    List<Article> articleList;
+
 
     public void setArticleList(List<Article> articleList) {
         this.articleList = articleList;
@@ -55,8 +57,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return articleList.size();
+        if (articleList == null) {
+            Timber.d("articleList==null");
+            return getItemCount();
+        } else return articleList.size();
+
     }
-
-
 }
+
+
+

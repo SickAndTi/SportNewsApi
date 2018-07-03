@@ -31,9 +31,9 @@ public class SportNewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_sportnews, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        RecyclerViewAdapter adapter = (RecyclerViewAdapter) recyclerView.getAdapter();
-        adapter.setArticleList(articleList);
-        return recyclerView;
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter();
+        recyclerView.setAdapter(adapter);
+        return view;
     }
 
     @Override
