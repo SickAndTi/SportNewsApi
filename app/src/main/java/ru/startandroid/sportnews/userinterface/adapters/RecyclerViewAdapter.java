@@ -17,9 +17,13 @@ import ru.startandroid.sportnews.models.api.Article;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    List<Article> articleList;
+   public List<Article> articleList;
 
-     static class ViewHolder extends RecyclerView.ViewHolder {
+    public void setArticleList(List<Article> articleList) {
+        this.articleList = articleList;
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView tvTitle, tvSource, tvDescription;
 
