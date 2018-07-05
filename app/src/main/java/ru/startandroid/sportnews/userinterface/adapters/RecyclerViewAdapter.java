@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import ru.startandroid.sportnews.GlideApp;
 import ru.startandroid.sportnews.R;
 import ru.startandroid.sportnews.models.api.Article;
 import timber.log.Timber;
@@ -19,7 +21,6 @@ import timber.log.Timber;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     List<Article> articleList;
-
 
     public void setArticleList(List<Article> articleList) {
         this.articleList = articleList;
@@ -49,9 +50,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Article article = articleList.get(position);
         holder.tvDescription.setText(article.description);
-        holder.tvSource.setText((CharSequence) article.source);
+        holder.tvSource.setText(article.source.name);
         holder.tvTitle.setText(article.title);
-        Glide.with(holder.itemView.getContext()).load(article.urlToImage).into(holder.imageView);
+        GlideApp
+                .with(holder.itemView.getContext())
+                .load(article.urlToImage)
+                .centerCrop()
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(holder.imageView);
+
 
     }
 
@@ -59,7 +66,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         if (articleList == null) {
             Timber.d("articleList==null");
-            return getItemCount();
+            return 0;
         } else return articleList.size();
 
     }

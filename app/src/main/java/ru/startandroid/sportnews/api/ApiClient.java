@@ -9,6 +9,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.startandroid.sportnews.Constants;
 import ru.startandroid.sportnews.models.api.Article;
+import ru.startandroid.sportnews.models.api.SportNews;
 
 public class ApiClient {
     HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -27,7 +28,7 @@ public class ApiClient {
 
     SportNewsApi sportNewsApi = retrofit.create(SportNewsApi.class);
 
-    public Call<List<Article>> getArticleList(String country, String category) {
+    public Call<SportNews> getArticleList(String country, String category) {
         return sportNewsApi.getArticleList(country, category, Constants.APIKEY);
     }
 
