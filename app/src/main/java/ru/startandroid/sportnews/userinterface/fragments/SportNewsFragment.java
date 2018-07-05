@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,6 +27,10 @@ public class SportNewsFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerViewAdapter adapter;
 
+    public void showError(String errorMessage) {
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+        Timber.d(errorMessage);
+    }
 
     @Nullable
     @Override
@@ -46,25 +51,27 @@ public class SportNewsFragment extends Fragment {
             @Override
             public void onResponse(Call<SportNews> call, Response<SportNews> response) {
                 if (response.isSuccessful()) {
-                    List<Article> articlesFromApi= response.body().articles;
-                    Timber.d(String.valueOf(articlesFromApi.size()));
-                    adapter.setArticleList(articlesFromApi);
-                    adapter.notifyDataSetChanged();
-
-
+                    SportNews responseBody = response.body();
+                    if (responseBody != null) {
+                        List<Article> articlesFromApi = responseBody.articles;
+                        adapter.setArticleList(articlesFromApi);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        showError("responseBody == null ");
+                    }
                 } else {
-                    Timber.d(String.valueOf(response.code()));
-
+                    showError("no Response " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<SportNews> call, Throwable t) {
-                Timber.d(t);
+                showError(t.getMessage());
             }
         });
     }
 }
+
 
 
 

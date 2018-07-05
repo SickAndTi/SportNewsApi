@@ -8,19 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.startandroid.sportnews.GlideApp;
 import ru.startandroid.sportnews.R;
 import ru.startandroid.sportnews.models.api.Article;
-import timber.log.Timber;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    List<Article> articleList;
+    private List<Article> articleList = new ArrayList<>();
 
     public void setArticleList(List<Article> articleList) {
         this.articleList = articleList;
@@ -30,13 +27,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ImageView imageView;
         TextView tvTitle, tvSource, tvDescription;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvSource = itemView.findViewById(R.id.tvSource);
-
         }
     }
 
@@ -58,17 +54,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .centerCrop()
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imageView);
-
-
     }
 
     @Override
     public int getItemCount() {
-        if (articleList == null) {
-            Timber.d("articleList==null");
-            return 0;
-        } else return articleList.size();
-
+        return articleList.size();
     }
 }
 

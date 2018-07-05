@@ -10,19 +10,18 @@ import ru.startandroid.sportnews.R;
 import ru.startandroid.sportnews.userinterface.fragments.SportNewsFragment;
 
 public class MainActivity extends AppCompatActivity {
-    FrameLayout conteiner;
+    FrameLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        conteiner = findViewById(R.id.conteiner);
-        {
-            Fragment fragment = new SportNewsFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.conteiner, fragment);
-            ft.commit();
-        }
+        container = findViewById(R.id.container);
+
+        Fragment fragment = new SportNewsFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.container, fragment);
+        ft.commit();
     }
 }
