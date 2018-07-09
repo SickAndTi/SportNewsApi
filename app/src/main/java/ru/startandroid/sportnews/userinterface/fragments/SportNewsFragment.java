@@ -18,6 +18,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.startandroid.sportnews.R;
 import ru.startandroid.sportnews.api.ApiClient;
+import ru.startandroid.sportnews.models.Converter;
 import ru.startandroid.sportnews.models.api.Article;
 import ru.startandroid.sportnews.models.api.SportNews;
 import ru.startandroid.sportnews.userinterface.adapters.RecyclerViewAdapter;
@@ -54,6 +55,7 @@ public class SportNewsFragment extends Fragment {
                     SportNews responseBody = response.body();
                     if (responseBody != null) {
                         List<Article> articlesFromApi = responseBody.articles;
+
                         adapter.setArticleList(articlesFromApi);
                         adapter.notifyDataSetChanged();
                     } else {
