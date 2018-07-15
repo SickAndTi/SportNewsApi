@@ -9,21 +9,21 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+
 @Dao
 public interface ArticleDao {
-    @Query("SELECT * FROM DbArticle")
-    List<DbArticle> getAll();
-
-    @Query("SELECT * FROM DbArticle WHERE id = :id")
-    DbArticle getById(long id);
+    @Query("SELECT * FROM DbArticle ORDER BY id DESC")
+    Flowable<List<DbArticle>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(DbArticle dbArticle);
+    List<Long> insert(List<DbArticle> dbArticleList);
 
     @Update
-    int update(List<DbArticle> dbArticleList);
+    int update(Observable<DbArticle> dbArticleList);
 
     @Delete
-    void delete(DbArticle dbArticle);
+    void delete(Observable<DbArticle> dbArticle);
 
 }

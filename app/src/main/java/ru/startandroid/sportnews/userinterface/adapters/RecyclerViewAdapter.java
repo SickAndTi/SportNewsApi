@@ -25,14 +25,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView tvTitle, tvSource, tvDescription;
+        TextView tvTitle, tvAuthor, tvDescription;
 
         ViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvSource = itemView.findViewById(R.id.tvSource);
+            tvAuthor = itemView.findViewById(R.id.tvAuthor);
         }
     }
 
@@ -46,7 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Article article = articleList.get(position);
         holder.tvDescription.setText(article.description);
-        holder.tvSource.setText(article.source.name);
+        holder.tvAuthor.setText(article.author);
         holder.tvTitle.setText(article.title);
         GlideApp
                 .with(holder.itemView.getContext())

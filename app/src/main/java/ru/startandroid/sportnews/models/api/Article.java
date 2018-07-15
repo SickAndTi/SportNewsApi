@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class Article {
 
     @SerializedName("source")
-    public String source;
+    public Source source;
     @SerializedName("author")
     public String author;
     @SerializedName("title")

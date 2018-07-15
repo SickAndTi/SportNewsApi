@@ -2,12 +2,14 @@ package ru.startandroid.sportnews.models.db;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
+import ru.startandroid.sportnews.models.api.Source;
 
 @Entity
 public class DbArticle {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    public String source;
     public String author;
     public String title;
     public String description;

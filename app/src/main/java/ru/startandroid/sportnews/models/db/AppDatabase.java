@@ -3,7 +3,7 @@ package ru.startandroid.sportnews.models.db;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-@Database(entities = {DbArticle.class}, version = 2)
-    public abstract class AppDatabase extends RoomDatabase {
-        public abstract ArticleDao articleDao();
-    }
+@Database(version = 2, entities = {DbArticle.class}, exportSchema = false)
+public abstract class AppDatabase extends RoomDatabase {
+    abstract public ArticleDao articleDao();
+}
