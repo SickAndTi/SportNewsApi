@@ -11,19 +11,28 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import ru.startandroid.sportnews.models.api.Article;
 
 @Dao
-public interface ArticleDao {
+ public abstract class ArticleDao {
     @Query("SELECT * FROM DbArticle ORDER BY id DESC")
-    Flowable<List<DbArticle>> getAll();
+    Flowable<List<DbArticle>> getDbArticle() {
+        return null;
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    List<Long> insert(List<DbArticle> dbArticleList);
+    public List<Article> insert(List<DbArticle> dbArticleList) {
+        return null;
+    }
 
     @Update
-    int update(Observable<DbArticle> dbArticleList);
+    int update(Observable<DbArticle> dbArticleList) {
+        return 0;
+    }
 
     @Delete
-    void delete(Observable<DbArticle> dbArticle);
+    void delete(Observable<DbArticle> dbArticle) {
+
+    }
 
 }

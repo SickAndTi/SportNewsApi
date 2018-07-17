@@ -14,13 +14,14 @@ import java.util.List;
 import ru.startandroid.sportnews.GlideApp;
 import ru.startandroid.sportnews.R;
 import ru.startandroid.sportnews.models.api.Article;
+import ru.startandroid.sportnews.models.db.DbArticle;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private List<Article> articleList = new ArrayList<>();
+    private List<DbArticle> dbArticleList = new ArrayList<>();
 
-    public void setArticleList(List<Article> articleList) {
-        this.articleList = articleList;
+    public void setDbArticleList(List<DbArticle> dbArticleList) {
+        this.dbArticleList = dbArticleList;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -44,13 +45,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Article article = articleList.get(position);
-        holder.tvDescription.setText(article.description);
-        holder.tvAuthor.setText(article.author);
-        holder.tvTitle.setText(article.title);
+        DbArticle dbArticle = dbArticleList.get(position);
+        holder.tvDescription.setText(dbArticle.description);
+        holder.tvAuthor.setText(dbArticle.author);
+        holder.tvTitle.setText(dbArticle.title);
         GlideApp
                 .with(holder.itemView.getContext())
-                .load(article.urlToImage)
+                .load(dbArticle.urlToImage)
                 .centerCrop()
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imageView);
@@ -58,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return articleList.size();
+        return dbArticleList.size();
     }
 }
 
