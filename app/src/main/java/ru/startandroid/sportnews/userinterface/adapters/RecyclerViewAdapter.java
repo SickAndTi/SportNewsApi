@@ -20,6 +20,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private List<DbArticle> dbArticleList = new ArrayList<>();
 
+    public RecyclerViewAdapter(List<DbArticle> dbArticles) {
+    }
+
     public void setDbArticleList(List<DbArticle> dbArticleList) {
         this.dbArticleList = dbArticleList;
     }

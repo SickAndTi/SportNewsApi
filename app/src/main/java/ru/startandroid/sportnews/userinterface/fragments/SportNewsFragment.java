@@ -1,5 +1,6 @@
 package ru.startandroid.sportnews.userinterface.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,8 +23,6 @@ import timber.log.Timber;
 
 public class SportNewsFragment extends Fragment {
     RecyclerView recyclerView;
-    RecyclerViewAdapter adapter;
-    Converter converter;
     ArticleDao articleDao;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -33,26 +32,35 @@ public class SportNewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sportnews, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new RecyclerViewAdapter();
-        recyclerView.setAdapter(adapter);
         return view;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         ApiClient apiClient = new ApiClient();
         Timber.d("onViewCreated");
         apiClient.getArticleList("us", "sports")
                 .map(sportNews -> sportNews.articles)
-                .map(articleList -> converter.convert(articleList))
-                .map(dbArticles -> articleDao.insert(dbArticles))
+                .map(Converter::convert)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext (don->Timber.d("DbArticle inserted"));
+                .subscribe(
+                        articles -> {
+                            Timber.d("articles inserted in to DB");
+                            articleDao.insert(articles);
+                        }
+                );
 
-
+        articleDao.getDbArticle()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(dbArticles -> {
+                    Timber.d("get dbArticles");
+                    recyclerView.setAdapter(new RecyclerViewAdapter(dbArticles));
+                });
     }
 
     @Override
