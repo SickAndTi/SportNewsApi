@@ -11,21 +11,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.startandroid.sportnews.R;
 import ru.startandroid.sportnews.api.ApiClient;
 import ru.startandroid.sportnews.models.Converter;
+import ru.startandroid.sportnews.models.db.AppDatabase;
 import ru.startandroid.sportnews.models.db.ArticleDao;
 import ru.startandroid.sportnews.userinterface.adapters.RecyclerViewAdapter;
 import timber.log.Timber;
+import toothpick.Toothpick;
+
+import static ru.startandroid.sportnews.Constants.APP_SCOPE;
 
 public class SportNewsFragment extends Fragment {
     RecyclerView recyclerView;
+    @Inject
     ArticleDao articleDao;
+    @Inject
+    AppDatabase appDatabase;
+    @Inject
+    Converter converter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Toothpick.inject(this, Toothpick.openScope(APP_SCOPE));
+    }
 
     @Nullable
     @Override
@@ -35,7 +51,6 @@ public class SportNewsFragment extends Fragment {
         return view;
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -44,14 +59,15 @@ public class SportNewsFragment extends Fragment {
         Timber.d("onViewCreated");
         apiClient.getArticleList("us", "sports")
                 .map(sportNews -> sportNews.articles)
-                .map(Converter::convert)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        articles -> {
+                .map(articleList -> Converter.convert(articleList))
+                .map(dbArticles -> {
                             Timber.d("articles inserted in to DB");
-                            articleDao.insert(articles);
+                            articleDao.insert(dbArticles);
                         }
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+
+
                 );
 
         articleDao.getDbArticle()

@@ -12,9 +12,9 @@ import io.reactivex.Flowable;
 @Dao
 public interface ArticleDao {
     @Query("SELECT * FROM DbArticle ORDER BY id DESC")
-    Flowable<List<DbArticle>> getDbArticle();
+    Flowable<DbArticle> getDbArticle();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    List<Long> insert(List<DbArticle> dbArticleList);
+    DbArticle insert(DbArticle dbArticle);
 
 }
