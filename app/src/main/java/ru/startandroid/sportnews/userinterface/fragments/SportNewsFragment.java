@@ -1,88 +1,60 @@
 package ru.startandroid.sportnews.userinterface.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import javax.inject.Inject;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+import java.util.List;
+
 import ru.startandroid.sportnews.R;
-import ru.startandroid.sportnews.api.ApiClient;
-import ru.startandroid.sportnews.models.Converter;
-import ru.startandroid.sportnews.models.db.AppDatabase;
-import ru.startandroid.sportnews.models.db.ArticleDao;
+import ru.startandroid.sportnews.models.db.DbArticle;
+import ru.startandroid.sportnews.mvp.SportNewsPresenter;
+import ru.startandroid.sportnews.mvp.SportNewsView;
 import ru.startandroid.sportnews.userinterface.adapters.RecyclerViewAdapter;
 import timber.log.Timber;
-import toothpick.Toothpick;
 
-import static ru.startandroid.sportnews.Constants.APP_SCOPE;
-
-public class SportNewsFragment extends Fragment {
+public class SportNewsFragment extends MvpAppCompatFragment implements SportNewsView {
+    @InjectPresenter
+    SportNewsPresenter sportNewsPresenter;
     RecyclerView recyclerView;
-    @Inject
-    ArticleDao articleDao;
-    @Inject
-    AppDatabase appDatabase;
-    @Inject
-    Converter converter;
-    CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Toothpick.inject(this, Toothpick.openScope(APP_SCOPE));
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sportnews, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ApiClient apiClient = new ApiClient();
-        Timber.d("onViewCreated");
-        apiClient.getArticleList("us", "sports")
-                .map(sportNews -> sportNews.articles)
-                .map(articleList -> Converter.convert(articleList))
-                .map(dbArticles -> {
-                            Timber.d("articles inserted in to DB");
-                            articleDao.insert(dbArticles);
-                        }
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
 
 
-                );
-
-        articleDao.getDbArticle()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(dbArticles -> {
-                    Timber.d("get dbArticles");
-                    recyclerView.setAdapter(new RecyclerViewAdapter(dbArticles));
-                });
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        compositeDisposable.dispose();
+    public void showArticles(List<DbArticle> dbArticleList) {
+        RecyclerViewAdapter adapter = (RecyclerViewAdapter) recyclerView.getAdapter();
+        adapter.setDbArticleList(dbArticleList);
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void showError(String errorMessage) {
+        Timber.e(errorMessage);
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
     }
 }
 
