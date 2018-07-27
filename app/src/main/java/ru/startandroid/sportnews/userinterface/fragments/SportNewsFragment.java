@@ -32,13 +32,13 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sportnews, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
     }
@@ -57,38 +57,6 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
         Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
     }
 }
-
-//    public void showError(String errorMessage) {
-//        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-//        Timber.d(errorMessage);
-//    }
-
-
-//        apiClient.getArticleList("us", "sports").enqueue(new Callback<SportNews>() {
-//            @Override
-//            public void onResponse(Call<SportNews> call, Response<SportNews> response) {
-//                if (response.isSuccessful()) {
-//                    SportNews responseBody = response.body();
-//                    if (responseBody != null) {
-//                        List<Article> articlesFromApi = responseBody.articles;
-//
-//
-//                        adapter.setArticleList(articlesFromApi);
-//                        adapter.notifyDataSetChanged();
-//                    } else {
-//                        showError("responseBody == null ");
-//                    }
-//                } else {
-//                    showError("no Response " + response.code());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<SportNews> call, Throwable t) {
-//                showError(t.getMessage());
-//            }
-//        });
-//    }
 
 
 

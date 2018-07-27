@@ -1,11 +1,12 @@
 package ru.startandroid.sportnews.mvp;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -15,7 +16,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.startandroid.sportnews.api.ApiClient;
 import ru.startandroid.sportnews.models.Converter;
-import ru.startandroid.sportnews.models.api.Article;
 import ru.startandroid.sportnews.models.db.ArticleDao;
 import ru.startandroid.sportnews.models.db.DbArticle;
 import timber.log.Timber;
@@ -31,8 +31,9 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
     ArticleDao articleDao;
     @Inject
     Converter converter;
-    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
@@ -40,7 +41,8 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
 
         Observable<List<DbArticle>> observable = apiClient.getArticleList("us", "sports")
                 .map(articleList -> converter.convert(articleList)
-                        .map(dbArticles -> articleDao.insert(dbArticles))
+                        .stream()
+                        .map(dbArticleList -> articleDao.insert(dbArticleList))
                         .subscribeOn(Schedulers.io()))
                 .observeOn(AndroidSchedulers.mainThread());
 
@@ -50,7 +52,7 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dbArticles -> {
                     Timber.d("%s", dbArticles);
-                    getViewState().showArticles((List<DbArticle>) dbArticles);
+                    getViewState().showArticles(dbArticles);
                 }));
     }
 
