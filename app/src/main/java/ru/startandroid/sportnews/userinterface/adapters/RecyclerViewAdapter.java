@@ -14,25 +14,29 @@ import java.util.List;
 import ru.startandroid.sportnews.GlideApp;
 import ru.startandroid.sportnews.R;
 import ru.startandroid.sportnews.models.api.Article;
+import ru.startandroid.sportnews.models.db.DbArticle;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private List<Article> articleList = new ArrayList<>();
+    private List<DbArticle> dbArticleList = new ArrayList<>();
 
-    public void setArticleList(List<Article> articleList) {
-        this.articleList = articleList;
+    public RecyclerViewAdapter(List<DbArticle> dbArticles) {
+    }
+
+    public void setDbArticleList(List<DbArticle> dbArticleList) {
+        this.dbArticleList = dbArticleList;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView tvTitle, tvSource, tvDescription;
+        TextView tvTitle, tvAuthor, tvDescription;
 
         ViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvSource = itemView.findViewById(R.id.tvSource);
+            tvAuthor = itemView.findViewById(R.id.tvAuthor);
         }
     }
 
@@ -44,13 +48,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Article article = articleList.get(position);
-        holder.tvDescription.setText(article.description);
-        holder.tvSource.setText(article.source.name);
-        holder.tvTitle.setText(article.title);
+        DbArticle dbArticle = dbArticleList.get(position);
+        holder.tvDescription.setText(dbArticle.description);
+        holder.tvAuthor.setText(dbArticle.author);
+        holder.tvTitle.setText(dbArticle.title);
         GlideApp
                 .with(holder.itemView.getContext())
-                .load(article.urlToImage)
+                .load(dbArticle.urlToImage)
                 .centerCrop()
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imageView);
@@ -58,7 +62,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return articleList.size();
+        return dbArticleList.size();
     }
 }
 

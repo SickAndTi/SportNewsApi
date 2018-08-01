@@ -1,29 +1,21 @@
 package ru.startandroid.sportnews.models.db;
 
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+
 @Dao
 public interface ArticleDao {
-    @Query("SELECT * FROM DbArticle")
-    List<DbArticle> getAll();
-
-    @Query("SELECT * FROM DbArticle WHERE id = :id")
-    DbArticle getById(long id);
+    @Query("SELECT * FROM DbArticle ORDER BY id DESC")
+    Flowable<List<DbArticle>> getDbArticle();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(DbArticle dbArticle);
-
-    @Update
-    int update(List<DbArticle> dbArticleList);
-
-    @Delete
-    void delete(DbArticle dbArticle);
+    List<Long> insert(List<DbArticle> dbArticleList);
 
 }

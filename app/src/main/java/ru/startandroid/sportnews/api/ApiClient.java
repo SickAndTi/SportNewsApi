@@ -1,30 +1,31 @@
 package ru.startandroid.sportnews.api;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.startandroid.sportnews.Constants;
+import ru.startandroid.sportnews.models.api.Article;
 import ru.startandroid.sportnews.models.api.SportNews;
 
 public class ApiClient {
-    private HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+    SportNewsApi sportNewsApi;
 
-    private OkHttpClient client = new OkHttpClient.Builder()
-            .addInterceptor(interceptor.setLevel(HttpLoggingInterceptor.Level.BODY))
-            .build();
+    @Inject
+    public ApiClient(Retrofit retrofit) {
+        sportNewsApi = retrofit.create(SportNewsApi.class);
+    }
 
-    private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://newsapi.org/v2/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build();
-
-    private SportNewsApi sportNewsApi = retrofit.create(SportNewsApi.class);
-
-    public Call<SportNews> getArticleList(String country, String category) {
-        return sportNewsApi.getArticleList(country, category, Constants.APIKEY);
+    public Observable<List<Article>> getArticleList(String country, String category) {
+        return sportNewsApi.getArticleList(country, category, Constants.APIKEY)
+                .map(sportNews -> sportNews.articles);
     }
 }
 

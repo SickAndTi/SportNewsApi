@@ -11,6 +11,6 @@ public class SportNews {
     @SerializedName("totalResults")
     public int totalResults;
     @SerializedName("articles")
-    public List<Article> articles = null;
+    public List<Article> articles;
 
 }

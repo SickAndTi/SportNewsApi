@@ -3,10 +3,15 @@ package ru.startandroid.sportnews.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import ru.startandroid.sportnews.models.api.Article;
 import ru.startandroid.sportnews.models.db.DbArticle;
 
 public class Converter {
+    @Inject
+    Converter() {
+    }
 
     public List<DbArticle> convert(List<Article> articleList) {
         List<DbArticle> dbArticleList = new ArrayList<>();
@@ -15,7 +20,6 @@ public class Converter {
             dbArticle.author = article.author;
             dbArticle.description = article.description;
             dbArticle.publishedAt = article.publishedAt;
-            dbArticle.source = article.source;
             dbArticle.title = article.title;
             dbArticle.url = article.url;
             dbArticle.urlToImage = article.urlToImage;
