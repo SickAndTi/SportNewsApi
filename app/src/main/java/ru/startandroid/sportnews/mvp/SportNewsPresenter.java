@@ -39,19 +39,18 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
         super.onFirstViewAttach();
         Toothpick.inject(this, Toothpick.openScope(APP_SCOPE));
 
-        Observable<List<DbArticle>> observable = apiClient.getArticleList("us", "sports")
-                .map(articleList -> converter.convert(articleList)
-                        .stream()
-                        .map(dbArticleList -> articleDao.insert(dbArticleList))
-                        .subscribeOn(Schedulers.io()))
-                .observeOn(AndroidSchedulers.mainThread());
+        apiClient.getArticleList("us", "sports")
+                .map(articleList -> converter.convert(articleList))
+                .map(dbArtticle -> articleDao.insert(dbArtticle))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
 
 
         compositeDisposable.add(articleDao.getDbArticle()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dbArticles -> {
-                    Timber.d("%s", dbArticles);
                     getViewState().showArticles(dbArticles);
                 }));
     }

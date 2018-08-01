@@ -46,6 +46,10 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
     @Override
     public void showArticles(List<DbArticle> dbArticleList) {
         RecyclerViewAdapter adapter = (RecyclerViewAdapter) recyclerView.getAdapter();
+        if (adapter == null) {
+            adapter = new RecyclerViewAdapter(dbArticleList);
+            recyclerView.setAdapter(adapter);
+        }
         adapter.setDbArticleList(dbArticleList);
         recyclerView.getAdapter().notifyDataSetChanged();
     }
