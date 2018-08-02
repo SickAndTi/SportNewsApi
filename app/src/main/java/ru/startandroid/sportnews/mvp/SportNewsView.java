@@ -10,4 +10,6 @@ public interface SportNewsView extends MvpView {
     void showArticles(List<DbArticle> dbArticleList);
 
     void showError(String errorMessage);
+
+    void showSwipeRefresherBar(boolean showSwipeRefresherBar);
 }

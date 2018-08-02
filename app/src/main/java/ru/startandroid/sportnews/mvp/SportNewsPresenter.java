@@ -1,24 +1,16 @@
 package ru.startandroid.sportnews.mvp;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.startandroid.sportnews.api.ApiClient;
 import ru.startandroid.sportnews.models.Converter;
 import ru.startandroid.sportnews.models.db.ArticleDao;
-import ru.startandroid.sportnews.models.db.DbArticle;
-import timber.log.Timber;
 import toothpick.Toothpick;
 
 import static ru.startandroid.sportnews.Constants.APP_SCOPE;
@@ -33,7 +25,6 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
     Converter converter;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
@@ -44,7 +35,13 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
                 .map(dbArtticle -> articleDao.insert(dbArtticle))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(longs -> {
+                            getViewState().showSwipeRefresherBar(false);
+                        },
+                        error -> {
+                            getViewState().showError(error.getMessage());
+                            getViewState().showSwipeRefresherBar(false);
+                        });
 
 
         compositeDisposable.add(articleDao.getDbArticle()
