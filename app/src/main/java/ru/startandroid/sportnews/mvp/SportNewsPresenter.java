@@ -30,7 +30,16 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
         super.onFirstViewAttach();
         Toothpick.inject(this, Toothpick.openScope(APP_SCOPE));
 
-        apiClient.getArticleList("us", "sports")
+        compositeDisposable.add(articleDao.getDbArticle()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(dbArticles -> {
+                    getViewState().showArticles(dbArticles);
+                }));
+    }
+
+    public void loadDataFromApi() {
+        compositeDisposable.add(apiClient.getArticleList("us", "sports")
                 .map(articleList -> converter.convert(articleList))
                 .map(dbArtticle -> articleDao.insert(dbArtticle))
                 .subscribeOn(Schedulers.io())
@@ -41,17 +50,9 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
                         error -> {
                             getViewState().showError(error.getMessage());
                             getViewState().showSwipeRefresherBar(false);
-                        });
+                        }));
 
-
-        compositeDisposable.add(articleDao.getDbArticle()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(dbArticles -> {
-                    getViewState().showArticles(dbArticles);
-                }));
     }
-
 
     @Override
     public void onDestroy() {

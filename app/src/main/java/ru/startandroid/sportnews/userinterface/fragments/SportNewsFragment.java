@@ -42,9 +42,8 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        swipeRefreshLayout.setOnRefreshListener();
+        swipeRefreshLayout.setOnRefreshListener(() -> sportNewsPresenter.loadDataFromApi());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
 
 
     }
