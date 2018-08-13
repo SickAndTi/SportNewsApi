@@ -13,14 +13,20 @@ import java.util.List;
 
 import ru.startandroid.sportnews.GlideApp;
 import ru.startandroid.sportnews.R;
-import ru.startandroid.sportnews.models.api.Article;
 import ru.startandroid.sportnews.models.db.DbArticle;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
+    private OnArticleClickListener onArticleClickListener;
+
+    public void setOnArticleClickListener(OnArticleClickListener onArticleClickListener) {
+        this.onArticleClickListener = onArticleClickListener;
+    }
+
     private List<DbArticle> dbArticleList = new ArrayList<>();
 
-    public RecyclerViewAdapter(List<DbArticle> dbArticles) {
+    public interface OnArticleClickListener {
+        void onClick(DbArticle dbArticle);
     }
 
     public void setDbArticleList(List<DbArticle> dbArticleList) {
@@ -58,6 +64,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .centerCrop()
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imageView);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onArticleClickListener.onClick(dbArticle);
+            }
+        });
     }
 
     @Override

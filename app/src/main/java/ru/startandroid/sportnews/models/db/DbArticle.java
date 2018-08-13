@@ -14,17 +14,4 @@ public class DbArticle {
     public String urlToImage;
     public String publishedAt;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DbArticle dbArticle = (DbArticle) o;
-        return id == dbArticle.id;
-    }
-
-    @Override
-    public int hashCode() {
-
-        return id;
-    }
 }

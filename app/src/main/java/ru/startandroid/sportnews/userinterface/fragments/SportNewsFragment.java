@@ -31,7 +31,6 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
 
     @Nullable
     @Override
-
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sportnews, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -52,10 +51,11 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
     public void showArticles(List<DbArticle> dbArticleList) {
         RecyclerViewAdapter adapter = (RecyclerViewAdapter) recyclerView.getAdapter();
         if (adapter == null) {
-            adapter = new RecyclerViewAdapter(dbArticleList);
+            adapter = new RecyclerViewAdapter();
             recyclerView.setAdapter(adapter);
         }
         adapter.setDbArticleList(dbArticleList);
+        adapter.setOnArticleClickListener((RecyclerViewAdapter.OnArticleClickListener) getActivity());
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
