@@ -29,12 +29,14 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         Toothpick.inject(this, Toothpick.openScope(APP_SCOPE));
+        getViewState().showProgressBar(true);
 
         compositeDisposable.add(articleDao.getDbArticle()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dbArticles -> {
                     getViewState().showArticles(dbArticles);
+                    getViewState().showProgressBar(false);
                 }));
     }
 
@@ -50,6 +52,7 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
                         error -> {
                             getViewState().showError(error.getMessage());
                             getViewState().showSwipeRefresherBar(false);
+                            getViewState().showProgressBar(false);
                         }));
 
     }

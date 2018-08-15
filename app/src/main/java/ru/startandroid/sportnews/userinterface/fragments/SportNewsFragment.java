@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -28,6 +29,7 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
     SportNewsPresenter sportNewsPresenter;
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
+    ProgressBar progressBar;
 
     @Nullable
     @Override
@@ -35,6 +37,7 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
         View view = inflater.inflate(R.layout.fragment_sportnews, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        progressBar = view.findViewById(R.id.progressBar);
         return view;
     }
 
@@ -69,6 +72,11 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
     @Override
     public void showSwipeRefresherBar(boolean showSwipeRefresherBar) {
         swipeRefreshLayout.setRefreshing(showSwipeRefresherBar);
+    }
+
+    @Override
+    public void showProgressBar(boolean showProgressBar) {
+        progressBar.setVisibility(showProgressBar ? View.VISIBLE : View.GONE);
     }
 }
 

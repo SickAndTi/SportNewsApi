@@ -12,4 +12,6 @@ public interface SportNewsView extends MvpView {
     void showError(String errorMessage);
 
     void showSwipeRefresherBar(boolean showSwipeRefresherBar);
+
+    void showProgressBar(boolean showProgressBar);
 }
