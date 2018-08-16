@@ -57,7 +57,7 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
             adapter = new RecyclerViewAdapter();
             recyclerView.setAdapter(adapter);
         }
-        adapter.setDbArticleList(dbArticleList);
+        adapter.setArticleList(dbArticleList);
         adapter.setOnArticleClickListener((RecyclerViewAdapter.OnArticleClickListener) getActivity());
         recyclerView.getAdapter().notifyDataSetChanged();
     }
@@ -77,6 +77,17 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
     @Override
     public void showProgressBar(boolean showProgressBar) {
         progressBar.setVisibility(showProgressBar ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showBottomProgress(boolean showBottomProgress) {
+        ((RecyclerViewAdapter) recyclerView.getAdapter()).showBottomProgress(showBottomProgress);
+
+    }
+
+    @Override
+    public void enableScrollListener(boolean enableScrollListener) {
+
     }
 }
 

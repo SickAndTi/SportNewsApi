@@ -14,4 +14,8 @@ public interface SportNewsView extends MvpView {
     void showSwipeRefresherBar(boolean showSwipeRefresherBar);
 
     void showProgressBar(boolean showProgressBar);
+
+    void showBottomProgress(boolean showBottomProgress);
+
+    void enableScrollListener(boolean enableScrollListener);
 }
