@@ -15,7 +15,7 @@ public class ArticleFragment extends Fragment {
     WebView webView;
     public static final String KEY = "KEY";
 
-    public static ArticleFragment createInstance (String url) {
+    public static ArticleFragment createInstance(String url) {
         ArticleFragment fragment = new ArticleFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY, url);
@@ -35,7 +35,11 @@ public class ArticleFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        webView.loadUrl(getArguments().getString(KEY));
+        if (getArguments() != null) {
+            webView.loadUrl(getArguments().getString(KEY));
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
 }

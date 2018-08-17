@@ -30,6 +30,7 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
         super.onFirstViewAttach();
         Toothpick.inject(this, Toothpick.openScope(APP_SCOPE));
         getViewState().showProgressBar(true);
+        loadDataFromApi(1);
 
         compositeDisposable.add(articleDao.getDbArticle()
                 .subscribeOn(Schedulers.io())
@@ -37,10 +38,15 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
                 .subscribe(dbArticles -> {
                     getViewState().showArticles(dbArticles);
                     getViewState().showProgressBar(false);
+                    getViewState().enableScrollListener(true);
                 }));
     }
 
-    public void loadDataFromApi() {
+    public void loadDataFromApi(int page) {
+        getViewState().enableScrollListener(false);
+        if (page > 1) {
+            getViewState().showBottomProgress(true);
+        }
         compositeDisposable.add(apiClient.getArticleList("us", "sports")
                 .map(articleList -> converter.convert(articleList))
                 .map(dbArtticle -> articleDao.insert(dbArtticle))
@@ -48,11 +54,17 @@ public class SportNewsPresenter extends MvpPresenter<SportNewsView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(longs -> {
                             getViewState().showSwipeRefresherBar(false);
+                            if (page > 1) {
+                                getViewState().showBottomProgress(false);
+                            }
                         },
                         error -> {
                             getViewState().showError(error.getMessage());
                             getViewState().showSwipeRefresherBar(false);
                             getViewState().showProgressBar(false);
+                            if (page > 1) {
+                                getViewState().showBottomProgress(false);
+                            }
                         }));
 
     }

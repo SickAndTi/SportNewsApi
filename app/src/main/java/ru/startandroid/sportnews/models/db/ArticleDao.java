@@ -8,7 +8,6 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 
 @Dao
 public interface ArticleDao {

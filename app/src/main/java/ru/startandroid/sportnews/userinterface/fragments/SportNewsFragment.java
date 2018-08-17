@@ -17,6 +17,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.List;
 
+import ru.startandroid.sportnews.Constants;
+import ru.startandroid.sportnews.EndlessRecyclerViewScrollListener;
 import ru.startandroid.sportnews.R;
 import ru.startandroid.sportnews.models.db.DbArticle;
 import ru.startandroid.sportnews.mvp.SportNewsPresenter;
@@ -44,7 +46,7 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        swipeRefreshLayout.setOnRefreshListener(() -> sportNewsPresenter.loadDataFromApi());
+        swipeRefreshLayout.setOnRefreshListener(() -> sportNewsPresenter.loadDataFromApi(1));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
@@ -87,7 +89,16 @@ public class SportNewsFragment extends MvpAppCompatFragment implements SportNews
 
     @Override
     public void enableScrollListener(boolean enableScrollListener) {
+        recyclerView.clearOnScrollListeners();
+        if (enableScrollListener) {
+            recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener() {
+                @Override
+                public void onLoadMore(int page, int totalItemsCount) {
+                    sportNewsPresenter.loadDataFromApi(totalItemsCount / Constants.PAGE_SIZE + 1);
 
+                }
+            });
+        }
     }
 }
 
